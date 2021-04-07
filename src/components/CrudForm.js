@@ -13,7 +13,7 @@ const CrudForm = ({createData, updateData, dataToEdit, setDataToEdit}) => {
 
     const [form, setForm] = useState(initialForm); 
 
-    //Con el useeffect es donde se va hacer el cambio de los datos en los inpurs del formulario
+    //Con el useeffect es donde se va hacer el cambio de los datos en los inputs del formulario
     useEffect(() => {
         //Recordar que data to edit ya trae los valores de la fila que se desea editar 
         if (dataToEdit) {

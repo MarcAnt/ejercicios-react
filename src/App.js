@@ -1,4 +1,5 @@
 import React from 'react'
+import CrudApi  from './components/CrudApi';
 import CrudApp from './components/CrudApp'; 
 
 function App() {
@@ -6,6 +7,9 @@ function App() {
     <> 
       <h1>Ejercicios con React</h1>
 
+      <CrudApi />
+
+      <hr/>
       <CrudApp />
 
       <hr/>
