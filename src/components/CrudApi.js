@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { helpHttp } from '../helpers/helpHttp';
 import CrudForm from './CrudForm';
 import CrudTable from './CrudTable';
 
@@ -9,8 +10,23 @@ const CrudApi = () => {
     const [db, setDb] = useState([]); 
 
     // cuando el valor este null, es que se hará un inserción, true cuando hará un actualización
-    const [dataToEdit, setDataToEdit] = useState(null); 
+    const [dataToEdit, setDataToEdit] = useState(null);
+    
+    //Helper para las funciones que contectan con la api
+    const api = helpHttp();
+    const url = "http://localhost:5000/santos";
 
+    useEffect(() => {
+      api.get(url).then(res => {
+          // Cuando no venga con error, actualizar la variable para enviarlos a la tabla
+          if (!res.err) {
+              setDb(res)
+          }else {
+              setDb(null)
+          }
+
+      });
+    }, [])
 
     const createData = (data) => {
 

@@ -15,8 +15,8 @@ const CrudTable = ({data, setDataToEdit, deleteData}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* Realizar un renderizado condicional de los datos y que por cada elmento se cree su fila */}
-                    {data.length === 0 ? ( <tr> <td colSpan="3"> Sin Datos</td> </tr> ) : ( data.map( el => <CrudTableRow key={el.id} el={el} setDataToEdit={setDataToEdit} deleteData={deleteData} />) ) }
+                     {/* Realizar un renderizado condicional de los datos y que por cada elmento se cree su fila */}
+                    {data.length === 0 ? ( <tr><td colSpan="3">Sin Datos</td></tr> ) : ( data.map( el => <CrudTableRow key={el.id} el={el} setDataToEdit={setDataToEdit} deleteData={deleteData} />) ) }
                 </tbody>
             </table>
         </div>

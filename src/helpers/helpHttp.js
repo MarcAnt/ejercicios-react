@@ -18,7 +18,8 @@ export const helpHttp = () => {
         //La peticion sera falsa porque no tendra nada y solo sera un get 
         if(!options.body) delete options.body;
 
-        console.log(options);
+        //console.log(options);
+
         //Detener la peticion si el servidor se cae
         setTimeout( () => controller.abort(), 3000 );
 
