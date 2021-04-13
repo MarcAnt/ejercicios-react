@@ -41,7 +41,7 @@ const CrudApp = () => {
 
     const [db, setDb] = useState(initialDB); 
 
-    // cuando el valor este null, es que se hará un inserción, true cuando hará un actualización
+    // cuando el valor este null, es que se hará un inserción, true cuando hará un actualización o cuando se le de clikc al btn de editar
     const [dataToEdit, setDataToEdit] = useState(null); 
 
 

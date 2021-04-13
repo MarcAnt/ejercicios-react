@@ -3,11 +3,18 @@ import React, { useState, useEffect } from 'react'
 import { helpHttp } from '../helpers/helpHttp';
 import CrudForm from './CrudForm';
 import CrudTable from './CrudTable';
+import Loader  from './Loader';
+import Message from './Message';
 
 
 const CrudApi = () => {
+    // Manejo del error 
+    const [error, setError] = useState(null);
 
-    const [db, setDb] = useState([]); 
+    // Manejo del loader 
+    const [loading, setLoading] = useState(false);
+
+    const [db, setDb] = useState(null); 
 
     // cuando el valor este null, es que se hará un inserción, true cuando hará un actualización
     const [dataToEdit, setDataToEdit] = useState(null);
@@ -17,39 +24,83 @@ const CrudApi = () => {
     const url = "http://localhost:5000/santos";
 
     useEffect(() => {
-      api.get(url).then(res => {
+      setLoading(true);
+      helpHttp().get(url).then(res => {
           // Cuando no venga con error, actualizar la variable para enviarlos a la tabla
           if (!res.err) {
-              setDb(res)
-          }else {
-              setDb(null)
+              setDb(res);
+              setError(null);
+            }else {
+                setDb(null);
+                setError();
           }
 
+          setLoading(false);
       });
-    }, [])
+    }, [url])
 
     const createData = (data) => {
 
         data.id = Date.now(); 
+        let options =  {body: data, headers:{"content-type":"applicaction/json"}};
 
-        setDb([...db, data]);
+        api.post(url,options).then((res) => {
+
+            console.log(res);
+            if(!res.err) {
+                setDb([...db, res]);
+            }else {
+                setError(res);
+            }
+        })
 
 
     };
 
     const updateData = (data) => {
+        let endpoint = `${url}/${data.id}`;
 
-        let newData = db.map(el => el.id === data.id ? data: el ); 
-        setDb(newData);
+        let options =  {body: data, headers:{"content-type":"applicaction/json"}};
+
+        api.put(endpoint, options).then((res) => {
+
+            console.log(res);
+
+            if(!res.err) {
+                let newData = db.map(el => el.id === data.id ? data: el ); 
+                setDb(newData);
+            }else {
+                //se manda el error en la respuesta
+                setError(res);
+            }
+        })
     };
 
     const deleteData = (id) => {
-        let isDelete = window.confirm(`¿Está seguro de eliminar el registro con eñ id '${id}'?`); 
+        let isDelete = window.confirm(`¿Está seguro de eliminar el registro con el id '${id}'?`); 
 
         if(isDelete) {
-            // solo almacena los elementos que son disntintos 
-            let newData = db.filter(el => el.id !== id); 
-            setDb(newData); 
+
+            let endpoint = `${url}/${id}`;
+
+            let options =  {headers:{"content-type":"applicaction/json"}};
+
+            api.del(endpoint, options).then((res) => {
+
+                console.log(res);
+
+                if(!res.err) {
+                    // solo almacena los elementos que son disntintos 
+                    let newData = db.filter(el => el.id !== id); 
+                    setDb(newData); 
+                    
+                }else {
+                    //se manda el error en la respuesta
+                    setError(res);
+                }
+            })
+
+           
         }else { 
             return; 
         }
@@ -66,12 +117,20 @@ const CrudApi = () => {
                 updateData={updateData} 
                 dataToEdit={dataToEdit} 
                 setDataToEdit={setDataToEdit}/>
+
+                {loading && <Loader /> }
+                {error &&  <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" /> }
                 
                 {/* deleteData se envia porque es donde estará el botón de eliminar (enCrudTableRow) */}
-                <CrudTable 
+                
+                
+                { db && <CrudTable 
                 data={db} 
                 setDataToEdit={setDataToEdit} 
-                deleteData={deleteData} />
+                deleteData={deleteData} /> }
+
+                
+               
 
             </article>
 
